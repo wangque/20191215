@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="js/animate.js">
+	</script>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	ul,li{
+		list-style: none;
+	}
+		#box{
+			width: 1200px;
+			height: 360px;
+			margin: 10px auto;
+			position: relative;
+			overflow:hidden;
+		}
+		.slider{
+			width: 8400px;
+			height: 360px;
+			position: absolute;
+			left: -1200px;
+		}
+		.slide{
+			width: 1200px;
+			height: 360px;
+			float: left;
+			overflow: hidden;
+		}
+		#box>span{
+			display: block;
+			width:30px;
+			height: 50px;
+			text-align: center;
+			cursor: pointer;
+			color:#fff;
+			top: 155px;
+			line-height: 50px;
+			background-color:rgb(255,0,0);
+			font-size: 30px;
+			position: absolute;
+			opacity: 0;
+		}
+		#left{
+			left:30px;
+		}
+		#right{
+			right: 30px;
+		}
+		.nav{
+			position: absolute;
+			left: 500px;
+			bottom: 20px;
+		}
+		.nav>li{
+			float: left;
+			width: 15px;
+			height: 15px;
+			background: #ccc;
+			cursor: pointer;
+			margin: 0 10px;
+			border-radius: 50%;
+			font-size: 13px;
+			text-align: center;
+			line-height: 15px;
+			color: #000;
+		}
+		.nav .active{
+			background: red;
+			color: #fff;
+		}
+		#contain{
+			background-color: #ccc;
+			height: 20px;
+		}
+		#horn{
+			margin-left: 180px;
+			display: inline-block;
+		}
+		#contain2{
+			display: inline-block;
+			width: 980px;
+			height: 17px;
+			margin:0 auto; 
+			position: relative;
+			overflow: hidden;
+			font-size: 15px;
+		}
+		#remind{
+			width: 1000px;
+			height: 17px;
+			line-height: 17px;
+			position: absolute;
+			left:540px;
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<div id="contain">
+			<div id="horn">
+				<img src="images/a15.png">
+			</div>
+			<div id="contain2">
+				<span id="remind">
+				</span>
+			 </div>
+		</div>
+		<div id="box">
+			<div class="slider"> 
+				<img class="slide" src="images/b5.png" alt="">
+				<img class="slide" src="images/b1.png" alt="">
+				<img class="slide" src="images/b2.png" alt="">
+				<img class="slide" src="images/b3.png" alt="">
+				<img class="slide" src="images/b4.png" alt="">
+				<img class="slide" src="images/b5.png" alt="">
+				<img class="slide" src="images/b1.png" alt="">
+			</div>
+			<span id="left"> < </span>
+			<span id="right"> > </span>
+			<ul class="nav" id="nav">
+				<li class="active"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script>
+	var box=document.getElementById("box");
+	var navlist=document.getElementById("nav").children;
+	var slider=document.getElementsByClassName("slider")[0];
+	var left=document.getElementById("left");
+	var right=document.getElementById("right");
+	var index=1;
+	var timer;
+	var isMoving=false;
+	var remind=document.getElementById("remind");
+	var clock;
+
+	function next(){
+		if(!isMoving){
+			isMoving=true;
+			index++;
+			navChange();
+			animate(slider, {left:-1200*index},function(){
+				if(index>5){
+				slider.style.left="-1200px";
+				index=1;
+				}
+				isMoving=false;
+			});
+		}
+ 	}
+	function pre(){
+		if(!isMoving){
+			isMoving=true;
+			index--;
+			navChange();
+			animate(slider, {left:-1200*index},function(){
+				if(index===0){
+				slider.style.left="-6000px";
+				index=5;
+				}
+				isMoving=false;
+			});
+		}
+	}
+	var timer=setInterval(next,1800);
+	box.onmouseover=function(){
+		animate(left,{opacity:50});
+		animate(right,{opacity:50});
+		clearInterval(timer);
+	}
+	box.onmouseout=function(){
+		animate(left,{opacity:0});
+		animate(right,{opacity:0});
+		timer=setInterval(next,1800);
+	}
+	right.onclick=next;
+	left.onclick=pre;
+	for(var i=0;i<navlist.length;i++){
+		navlist[i].idx=i;
+		navlist[i].innerHTML=i+1;
+		navlist[i].onclick=function(){
+			index=this.idx+1;
+			navChange();
+			animate(slider,{left:-1200*index});
+		}
+	}
+	function navChange(){
+		for(var i=0;i<navlist.length;i++){
+			navlist[i].className='';
+		}
+		if(index>5){
+			navlist[0].className="active";
+		}else if(index==0){
+			navlist[4].className="active";
+		}
+		else{
+			navlist[index-1].className="active";
+		}
+	}
+
+	remind.innerHTML="[温馨提示]最近有不少不法分子在网上骗人，请大家注意！！！";
+
+	var clock=setInterval(function(){
+		var now=parseInt(getStyle(remind,'left'));
+		console.log(now);
+		if(now==-500){
+			remind.style.left="540px";
+		}else{
+			remind.style.left=now-1+"px";
+		}
+	}, 10)
+
+
+
+
+
+
+
+
+</script>
+</html>
